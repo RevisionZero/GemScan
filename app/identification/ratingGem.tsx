@@ -1,4 +1,4 @@
-// File: app/identification/rating.tsx
+// File: app/identification/ratingGem.tsx
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Button, Alert } from 'react-native';
 import { AirbnbRating } from 'react-native-ratings';
