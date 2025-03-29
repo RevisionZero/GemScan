@@ -6,3 +6,7 @@ node_modules
 
 expo-env.d.ts
 # @end expo-cli
+
+# Expo files
+.expo/
+.expo-shared/
