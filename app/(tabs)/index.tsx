@@ -1,5 +1,4 @@
 import { Image, StyleSheet, Platform, Text, View, Button } from 'react-native';
-
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
@@ -13,7 +12,8 @@ export default function HomeScreen() {
     <SafeAreaProvider>
       <SafeAreaView>
         <Text>GemScan</Text>
-        <Button title="Identify gemstone" onPress={() => router.navigate('/identification/scan')}/>
+        <Button title="Identify gemstone" onPress={() => router.navigate('/identification/scan')} />
+        <Button title="View Identification History" onPress={() => router.navigate('/identification/history')} />
       </SafeAreaView>
     </SafeAreaProvider>
   );

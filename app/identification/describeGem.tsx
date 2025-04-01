@@ -7,3 +7,14 @@ export default function describeGem(){
         </View>
     );
 };
+
+import { db } from '../../lib/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+
+const saveResult = async (gemName: string) => {
+  await addDoc(collection(db, 'identifications'), {
+    gemName,
+    date: serverTimestamp(),
+    rating: null,
+  });
+};
