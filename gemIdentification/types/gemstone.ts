@@ -2,9 +2,21 @@ class Gemstone{
     private image:string = "";
     private color:number[] = [0,0,0];
     private size:number = 0;
-    private attributes:Map<String,String> = new Map();
+    private attributes:Map<string,string> = new Map();
 
-    constructor(){
+    constructor(image?:string,color?:number[],size?:number,attributes?:Map<string,string>){
+        if(image != undefined){
+            this.image = image;
+        }
+        if(color != undefined){
+            this.color = color;
+        }
+        if(size != undefined){
+            this.size = size;
+        }
+        if(attributes != undefined){
+            this.attributes = attributes;
+        }
     };
 
     setImage(uri:string){
