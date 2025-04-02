@@ -1,4 +1,4 @@
-class Gemstone{
+export default class Gemstone{
     private image:string = "";
     private color:number[] = [0,0,0];
     private size:number = 0;

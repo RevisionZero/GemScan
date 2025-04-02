@@ -1,10 +1,15 @@
-class ExpertBlackboard{
+import Gemstone from "../types/gemstone";
+import Result from "../types/result";
+import ForumAggregator from "./forumAggregator";
+import ResultsAggregator from "./resultsAggregator";
+
+export default class ExpertBlackboard{
     private gemstone:Gemstone;
     private experts:Expert[];
     private resultsAggregator:ResultsAggregator;
 
     constructor(){
-        this.resultsAggregator = new ForumAggregator;
+        this.resultsAggregator = new ForumAggregator();
         this.gemstone = new Gemstone();
     }
 
@@ -13,7 +18,7 @@ class ExpertBlackboard{
     }
 
     requestIdentification():Result{
-        return new Result;
+        return new Result();
     };
 
     initiateExpert():void{

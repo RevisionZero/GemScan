@@ -1,8 +1,10 @@
-import { View, Text, TouchableOpacity, Button, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, Button, StyleSheet, Alert } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Camera, CameraType, CameraView, useCameraPermissions } from "expo-camera";
 import { useRef, useState } from "react";
 import { useRouter } from "expo-router";
+import * as ImagePicker from 'expo-image-picker';
+import GemIdentificationManager from "@/gemIdentification/gemIdentificationManagement/gemIdentificationManager";
 
 export default function Scan(){
     const [facing, setFacing] = useState<CameraType>('back');
@@ -15,9 +17,40 @@ export default function Scan(){
         const pic = await cameraRef.current.takePictureAsync();
         console.log("Picture:", pic);
         const gemManager:GemIdentificationManager = GemIdentificationManager.getInstance();
-        router.navigate('/identification/describeGem')
+        if(gemManager.scanGemstone(pic?.uri)){
+          console.log('Navigate to describe')
+          router.navigate('/identification/describeGem')
+        }
+        else{
+          Alert.alert('Scan Unsuccessful', 'Scan Unsuccessful', [
+            {
+              text: 'Retry Scan',
+              onPress: () => {},
+            },
+            {
+              text: 'Home',
+              onPress: () => {router.navigate('/');gemManager.scanGemstone("")},
+              style: 'cancel',
+            }
+          ]);
+        }
       }
     };
+
+    async function uploadImage() {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images', 'videos'],
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+  
+      console.log(result);
+  
+      // if (!result.canceled) {
+      //   setImage(result.assets[0].uri);
+      // }
+    }
 
     if (!permission) {
         // Camera permissions are still loading.
@@ -48,6 +81,7 @@ export default function Scan(){
         </View>
         <Button title="Scan" onPress={scanGem}></Button>
       </CameraView>
+      <Button title="Upload Image" onPress={uploadImage}></Button>
     </View>
         </SafeAreaProvider>
     );

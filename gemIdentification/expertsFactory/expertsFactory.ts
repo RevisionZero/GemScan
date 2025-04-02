@@ -1,3 +1,3 @@
-interface ExpertsFactory{
+export default interface ExpertsFactory{
     createExperts():Expert[];
 }
