@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TextInput, Button } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
-import { db } from '../../lib/firebase';
+import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import GemIdentificationManager from "@/gemIdentification/gemIdentificationManagement/gemIdentificationManager";
 // import { TextInput } from "react-native-gesture-handler";

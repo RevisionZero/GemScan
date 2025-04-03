@@ -10,3 +10,14 @@ expo-env.d.ts
 # Expo files
 .expo/
 .expo-shared/
+
+# Virtual devices
+android
+ios
+
+# API Key
+lib/apikey.json
+
+# Gemstone database file
+gemdata.json
+
