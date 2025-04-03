@@ -3,6 +3,7 @@ import ForumExpertsFactory from '../expertsFactory/forumExpertsFactory';
 import ExpertsFactory from '../expertsFactory/expertsFactory';
 import Gemstone from '../types/gemstone';
 import Result from '../types/result';
+import Expert from '../experts/expert';
 
 export default class GemIdentificationManager{
 
@@ -46,8 +47,34 @@ export default class GemIdentificationManager{
         }
     };
 
-    describeGemstone(description:Map<string,string>){
-        const gemstone = new Gemstone("",[0,0,0],0,description);
+    describeGemstone(color:string,size:number,transparency:string, shininess:string){
+        let rgbColor:number[] = [];
+        switch(color) { 
+            case "red": { 
+               rgbColor = [255,0,0]; 
+               break; 
+            } 
+            case "blue": { 
+               rgbColor = [0,0,255]; 
+               break; 
+            } 
+            case "green": { 
+                rgbColor = [0,255,0]; 
+                break; 
+            }
+            case "yellow": { 
+                rgbColor = [255,255,0]; 
+                break; 
+            }
+            case "white": { 
+                rgbColor = [256,255,255]; 
+                break; 
+            }   
+            default: { 
+               break; 
+            } 
+         } 
+        const gemstone = new Gemstone("",rgbColor,size,transparency,shininess);
         this.expertBlackboard.updateGemstone(gemstone);
     };
 
@@ -57,10 +84,16 @@ export default class GemIdentificationManager{
         return experts;
     }
 
-    startIdentification():void{
+    async identifyGemstone(){
+        this.identificationInProgress = true;
+        await this.expertBlackboard.requestIdentification();
+        
+    }
+
+    private startIdentification():void{
         this.identificationInProgress = true;
     }
-    endIdentification():Result{
+    private endIdentification():Result{
         this.identificationInProgress = false;
         return new Result;
     }

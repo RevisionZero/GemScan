@@ -2,9 +2,11 @@ export default class Gemstone{
     private image:string = "";
     private color:number[] = [0,0,0];
     private size:number = 0;
-    private attributes:Map<string,string> = new Map();
+    // private attributes:Map<string,string> = new Map();
+    private transparency:string = "";
+    private shininess:string = "";
 
-    constructor(image?:string,color?:number[],size?:number,attributes?:Map<string,string>){
+    constructor(image?:string,color?:number[],size?:number,transparency?:string, shininess?:string){
         if(image != undefined){
             this.image = image;
         }
@@ -14,8 +16,11 @@ export default class Gemstone{
         if(size != undefined){
             this.size = size;
         }
-        if(attributes != undefined){
-            this.attributes = attributes;
+        if(transparency != undefined){
+            this.transparency = transparency;
+        }
+        if(shininess != undefined){
+            this.shininess = shininess;
         }
     };
 
@@ -48,12 +53,20 @@ export default class Gemstone{
     };
 
 
-    setAttributes(attributes:Map<string,string>){
-        this.attributes = attributes;
+    setTransparency(transparency:string){
+        this.transparency = this.transparency;
     }
 
-    getAttributes(){
-        return this.attributes;
+    getTransparency(){
+        return this.transparency;
+    };
+
+    setShininess(shininess:string){
+        this.shininess = this.shininess;
+    }
+
+    getShininess(){
+        return this.shininess;
     };
 
 }

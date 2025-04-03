@@ -1,3 +1,4 @@
+import Expert from "../experts/expert";
 import Gemstone from "../types/gemstone";
 import Result from "../types/result";
 import ForumAggregator from "./forumAggregator";
@@ -17,7 +18,12 @@ export default class ExpertBlackboard{
         this.experts = experts;
     }
 
-    requestIdentification():Result{
+    async requestIdentification():Promise<Result>{
+        this.experts.forEach(expert => {
+            expert.identify(this.gemstone);
+        });
+        let results = await Promise.all(this.experts);
+        this.resultsAggregator.aggregateResults();
         return new Result();
     };
 
@@ -26,17 +32,20 @@ export default class ExpertBlackboard{
     };
 
     updateGemstone(gemstoneDescription:Gemstone):void{
-        if(gemstoneDescription.getImage != undefined){
+        if(!gemstoneDescription.getImage){
             this.gemstone.setImage(gemstoneDescription.getImage());
         }
-        if(gemstoneDescription.getColor != undefined){
+        if(!gemstoneDescription.getColor){
             this.gemstone.setColor(gemstoneDescription.getColor());
         }
-        if(gemstoneDescription.getSize != undefined){
+        if(!gemstoneDescription.getSize){
             this.gemstone.setSize(gemstoneDescription.getSize());
         }
-        if(gemstoneDescription.getAttributes != undefined){
-            this.gemstone.setAttributes(gemstoneDescription.getAttributes());
+        if(!gemstoneDescription.getTransparency){
+            this.gemstone.setTransparency(gemstoneDescription.getTransparency());
+        }
+        if(!gemstoneDescription.getShininess){
+            this.gemstone.setShininess(gemstoneDescription.getShininess());
         }
     }
 }
