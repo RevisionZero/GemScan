@@ -6,6 +6,9 @@ import { ThemedView } from '@/components/ThemedView';
 import { useRouter } from 'expo-router';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
+import { useState, useEffect } from 'react';
+import auth from '@react-native-firebase/auth';
+
 export default function HomeScreen() {
   const router = useRouter();
   return (
