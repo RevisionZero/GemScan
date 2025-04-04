@@ -6,7 +6,7 @@ import { useRouter } from 'expo-router';
 import { collection, getDocs, query, orderBy, Timestamp } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 
-export default function HistoryScreen() {
+export default function History() {
   const router = useRouter();
   const [historyData, setHistoryData] = useState<any[]>([]);
 
