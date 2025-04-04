@@ -14,7 +14,6 @@ export default function HomeScreen() {
         <Text>GemScan</Text>
         <Button title="Identify gemstone" onPress={() => router.navigate('/identification/scan')} />
         <Button title="View Identification History" onPress={() => router.navigate('/identification/idHistory')} />
-        <Button title="Login" onPress={() => router.navigate('/auth/Login')} />
       </SafeAreaView>
     </SafeAreaProvider>
   );
