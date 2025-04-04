@@ -13,12 +13,14 @@ import {
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
 } from "firebase/auth";
+import { useRouter } from "expo-router";
 
 export default function Authentication() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const auth = FIREBASE_AUTH;
+    const router = useRouter();
 
     const signIn = async () => {
         setLoading(true);
@@ -29,6 +31,7 @@ export default function Authentication() {
                 password
             );
             console.log(response);
+            router.replace("/(tabs)");
         } catch (error) {
             console.log(error);
         } finally {

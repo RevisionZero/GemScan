@@ -1,54 +1,35 @@
-import { useRootNavigationState } from "expo-router";
-import { useRouter, useSegments } from "expo-router";
+import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Text, View } from "react-native";
-import { FIREBASE_AUTH, onAuthStateChanged } from "../lib/firebase";
-
-// Import Firebase auth
+import { onAuthStateChanged } from "firebase/auth";
+import { FIREBASE_AUTH } from "../lib/firebase";
 
 const Index = () => {
-    const segments = useSegments();
     const router = useRouter();
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const navigationState = useRootNavigationState();
-    const auth = FIREBASE_AUTH;
+    const [authChecked, setAuthChecked] = useState(false);
 
     useEffect(() => {
-        if (!navigationState?.key) return;
-
-        // Set up an auth state listener
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
             if (user) {
-                setIsLoggedIn(true);
+                router.replace("/(tabs)");
             } else {
-                setIsLoggedIn(false);
+                router.replace("/auth/Authentication");
             }
+            setAuthChecked(true);
         });
 
-        return () => unsubscribe(); // Clean up the listener on unmount
-    }, [navigationState?.key]);
+        return unsubscribe;
+    }, []);
 
-    useEffect(() => {
-        if (!navigationState?.key) return;
+    if (!authChecked) {
+        return (
+            <View className="flex-1 justify-center items-center">
+                <Text>Loading...</Text>
+            </View>
+        );
+    }
 
-        const inAuthGroup = segments[0] === "auth";
-
-        if (
-            // If the user is not signed in and the initial segment is not in the auth group
-            !isLoggedIn &&
-            !inAuthGroup
-        ) {
-            // Redirect to the login page
-            router.replace("/auth/Authentication");
-        } else if (isLoggedIn) {
-            // Redirect to the home page if logged in
-            router.replace("/(tabs)");
-        }
-    }, [isLoggedIn, segments, navigationState?.key]);
-
-    return (
-        <View>{!navigationState?.key ? <Text>LOADING...</Text> : <></>}</View>
-    );
+    return null;
 };
 
 export default Index;
