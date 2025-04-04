@@ -6,9 +6,6 @@ import { ThemedView } from '@/components/ThemedView';
 import { useRouter } from 'expo-router';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-import { useState, useEffect } from 'react';
-import auth from '@react-native-firebase/auth';
-
 export default function HomeScreen() {
   const router = useRouter();
   return (
@@ -16,7 +13,8 @@ export default function HomeScreen() {
       <SafeAreaView>
         <Text>GemScan</Text>
         <Button title="Identify gemstone" onPress={() => router.navigate('/identification/scan')} />
-        <Button title="View Identification History" onPress={() => router.navigate('/identification/history')} />
+        <Button title="View Identification History" onPress={() => router.navigate('/identification/idHistory')} />
+        <Button title="Login" onPress={() => router.navigate('/auth/Login')} />
       </SafeAreaView>
     </SafeAreaProvider>
   );

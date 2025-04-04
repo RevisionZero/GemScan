@@ -7,7 +7,7 @@ export default function Profile() {
   return (
     <SafeAreaView>
         <Text>Profile</Text>
-      </SafeAreaView>
+    </SafeAreaView>
   )
 }
 
