@@ -4,6 +4,9 @@ import { useState } from "react";
 import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import GemIdentificationManager from "@/gemIdentification/gemIdentificationManagement/gemIdentificationManager";
+import DataExpert from "@/gemIdentification/experts/dataExpert";
+import Gemstone from "@/gemIdentification/types/gemstone";
+import Result from "@/gemIdentification/types/result";
 // import { TextInput } from "react-native-gesture-handler";
 
 
