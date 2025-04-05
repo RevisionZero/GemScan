@@ -15,8 +15,9 @@ expo-env.d.ts
 android
 ios
 
-# API Key
+# API Keys
 lib/apikey.json
+lib/openrouterAPIKey.json
 
 # Gemstone database file
 gemdata.json

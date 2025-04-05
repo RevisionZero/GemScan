@@ -23,7 +23,7 @@ export default class DataExpert implements Expert{
                 )
             );
 
-            let gem:Object = {};
+            let gem;
             const query1 = await getDocs(q1);
             if(!query1.empty){
                 gem = query1.docs[0].data();
@@ -41,13 +41,11 @@ export default class DataExpert implements Expert{
                 result.confidence = 0.9;
                 result.result = true;
                 result.name = gem["name"];
-                console.log('NAME: ',result.name)
                 result.gemstone = new Gemstone('',[],0,'',gem["luster"][0],gem["color"][0]);
                 return result;
             }
 
         }
-        console.log('Condition NOT okay')
         let emptyResult = new Result();
         emptyResult.confidence = 0;
         emptyResult.gemstone = new Gemstone();
