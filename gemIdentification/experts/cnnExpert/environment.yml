@@ -1,0 +1,20 @@
+name: gemstone_cnn_env
+channels:
+  - pytorch-nightly
+  - defaults
+dependencies:
+  - python=3.9
+  - pytorch
+  - torchvision
+  - matplotlib
+  - numpy
+  - pandas
+  - scikit-learn
+  - opencv
+  - pillow
+  - flask
+  - pip
+  - seaborn
+  - pip:
+      - wget
+      - firebase-admin
