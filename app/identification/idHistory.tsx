@@ -12,7 +12,7 @@ export default function History() {
 
   const fetchHistory = async () => {
     try {
-      const q = query(collection(db, 'identifications'), orderBy('date', 'desc'));
+      const q = query(collection(db, 'historydata'), orderBy('userID', 'desc'));
       const snapshot = await getDocs(q);
       const results = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setHistoryData(results);
