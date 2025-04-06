@@ -7,13 +7,16 @@ import Expert from '../experts/expert';
 
 export default class GemIdentificationManager{
 
-    private static instance:GemIdentificationManager = new GemIdentificationManager("");
+    private static instance:GemIdentificationManager;
     private premium:string = "";
     private expertBlackboard:ExpertBlackboard;
     private expertsFactory:ExpertsFactory;
     private identificationInProgress = false;
 
     static getInstance(): GemIdentificationManager{
+        if(!GemIdentificationManager.instance){
+            this.instance = new GemIdentificationManager("");
+        }
         console.log('Getting instance')
         console.log(GemIdentificationManager.instance)
         // if(!GemIdentificationManager.instance){
@@ -28,8 +31,8 @@ export default class GemIdentificationManager{
     constructor(premium:string){
         console.log('Constructing gem manager')
         this.premium = premium;
-        this.expertBlackboard = new ExpertBlackboard;
-        this.expertsFactory = new ForumExpertsFactory
+        this.expertBlackboard = new ExpertBlackboard();
+        this.expertsFactory = new ForumExpertsFactory();
         this.createExperts();
     }
 
@@ -48,33 +51,34 @@ export default class GemIdentificationManager{
     };
 
     describeGemstone(color:string,size:number,transparency:string, shininess:string){
-        let rgbColor:number[] = [];
-        switch(color) { 
-            case "red": { 
-               rgbColor = [255,0,0]; 
-               break; 
-            } 
-            case "blue": { 
-               rgbColor = [0,0,255]; 
-               break; 
-            } 
-            case "green": { 
-                rgbColor = [0,255,0]; 
-                break; 
-            }
-            case "yellow": { 
-                rgbColor = [255,255,0]; 
-                break; 
-            }
-            case "white": { 
-                rgbColor = [256,255,255]; 
-                break; 
-            }   
-            default: { 
-               break; 
-            } 
-         } 
-        const gemstone = new Gemstone("",rgbColor,size,transparency,shininess);
+        // let rgbColor:number[] = [];
+        // switch(color) { 
+        //     case "red": { 
+        //        rgbColor = [255,0,0]; 
+        //        break; 
+        //     } 
+        //     case "blue": { 
+        //        rgbColor = [0,0,255]; 
+        //        break; 
+        //     } 
+        //     case "green": { 
+        //         rgbColor = [0,255,0]; 
+        //         break; 
+        //     }
+        //     case "yellow": { 
+        //         rgbColor = [255,255,0]; 
+        //         break; 
+        //     }
+        //     case "white": { 
+        //         rgbColor = [256,255,255]; 
+        //         break; 
+        //     }   
+        //     default: { 
+        //        break; 
+        //     } 
+        //  } 
+        console.log('CALLED UPDATE GEMSTONE IN MANAGER')
+        const gemstone = new Gemstone("",[0,0,0],size,transparency,shininess,color)
         this.expertBlackboard.updateGemstone(gemstone);
     };
 
@@ -84,10 +88,10 @@ export default class GemIdentificationManager{
         return experts;
     }
 
-    async identifyGemstone(){
+    async identifyGemstone():Promise<Result>{
         this.identificationInProgress = true;
-        await this.expertBlackboard.requestIdentification();
-        
+        let result = await this.expertBlackboard.requestIdentification();
+        return result;
     }
 
     private startIdentification():void{

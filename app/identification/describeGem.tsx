@@ -7,22 +7,43 @@ import GemIdentificationManager from "@/gemIdentification/gemIdentificationManag
 import DataExpert from "@/gemIdentification/experts/dataExpert";
 import Gemstone from "@/gemIdentification/types/gemstone";
 import Result from "@/gemIdentification/types/result";
+import { router, useRouter } from "expo-router";
 // import { TextInput } from "react-native-gesture-handler";
 
 
 export default function describeGem(){
-    const [color, setColor] = useState("");
-    const [size, setSize] = useState("");
-    const [transparency, setTransparency] = useState("");
+    const [color, setColor] = useState("red");
+    const [size, setSize] = useState("0");
+    const [transparency, setTransparency] = useState("transparent");
     const [fluorescence, setFluorescence] = useState("");
     const [shape, setShape] = useState("");
-    const [luster, setLuster] = useState("");
+    const [luster, setLuster] = useState("metallic");
 
-    function submitDescription(){
+    const router = useRouter();
+
+    async function submitDescription(){
       const gemManager = GemIdentificationManager.getInstance();
+      console.log('Gemstone desc from describeGem:')
+      console.log(color)
+      console.log(size)
+      console.log(transparency)
+      console.log(luster)
       gemManager.describeGemstone(color,+size, transparency, luster);
-      gemManager.identifyGemstone();
-
+      let finalResult = await gemManager.identifyGemstone();
+      console.log('\n\n\nRECIEVED FINAL RESULT\n',finalResult)
+      router.push({
+        pathname: '/identification/identificationResult',
+        params: {
+          result: String(finalResult.result),
+          name: finalResult.name,
+          confidence: String(finalResult.confidence),
+          image: finalResult.gemstone.getImage(),
+          color: finalResult.gemstone.getColorString(),
+          size: String(finalResult.gemstone.getSize()),
+          transparency: finalResult.gemstone.getTransparency(),
+          shininess: finalResult.gemstone.getShininess()
+        }
+      });
     }
 
     return(
@@ -35,7 +56,7 @@ export default function describeGem(){
               </View> */}
               <View style={{flex:1}}>
                 <Text>Closest Color:</Text>
-                <Picker selectedValue={color} onValueChange={setColor}>
+                <Picker selectedValue={color} onValueChange={(itemValue, itemIndex) => {setColor(itemValue), console.log('COLOR STATE:\n', color)}}>
                   <Picker.Item label="Red" value="red" />
                   <Picker.Item label="Blue" value="blue" />
                   <Picker.Item label="Green" value="green" />
@@ -45,7 +66,7 @@ export default function describeGem(){
               </View>
               <View style={{flex:1}}>
                 <Text>Transparency:</Text>
-                <Picker selectedValue={transparency} onValueChange={setTransparency}>
+                <Picker selectedValue={transparency} onValueChange={(itemValue, itemIndex) => setTransparency(itemValue)}>
                   <Picker.Item label="Transparent" value="transparent" />
                   <Picker.Item label="Translucent" value="translucent" />
                   <Picker.Item label="Opaque" value="opaque" />
@@ -59,7 +80,7 @@ export default function describeGem(){
               </View>
               <View style={{flex:1}}>
                 <Text>Shininess:</Text>
-                <Picker selectedValue={luster} onValueChange={setLuster}>
+                <Picker selectedValue={luster} onValueChange={(itemValue, itemIndex) => setLuster(itemValue)}>
                   <Picker.Item label="Metallic" value="metallic" />
                   <Picker.Item label="Waxy" value="waxy" />
                   <Picker.Item label="Dull" value="dull" />

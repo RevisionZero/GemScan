@@ -19,12 +19,11 @@ export default class ExpertBlackboard{
     }
 
     async requestIdentification():Promise<Result>{
-        this.experts.forEach(expert => {
-            expert.identify(this.gemstone);
-        });
-        let results = await Promise.all(this.experts);
-        this.resultsAggregator.aggregateResults();
-        return new Result();
+        console.log('Gemstone inside blackboard:\n',this.gemstone)
+        const promises = this.experts.map(expert => expert.identify(this.gemstone));
+        let results = await Promise.all(promises);
+        let finalResult = this.resultsAggregator.aggregateResults(results);
+        return finalResult;
     };
 
     initiateExpert():void{
@@ -32,20 +31,33 @@ export default class ExpertBlackboard{
     };
 
     updateGemstone(gemstoneDescription:Gemstone):void{
-        if(!gemstoneDescription.getImage){
+        console.log('\n\n\nUPDATING GEMSTONE')
+        console.log('RECIEVED GEMSTONE:\n',gemstoneDescription,'\n')
+        if(!this.gemstone.getImage()){
+            console.log('UPDATING IMAGE')
             this.gemstone.setImage(gemstoneDescription.getImage());
         }
-        if(!gemstoneDescription.getColor){
+        if(!this.gemstone.getColor()){
+            console.log('UPDATING COLOR')
             this.gemstone.setColor(gemstoneDescription.getColor());
         }
-        if(!gemstoneDescription.getSize){
+        if(!this.gemstone.getSize()){
+            console.log('UPDATING SIZE')
             this.gemstone.setSize(gemstoneDescription.getSize());
         }
-        if(!gemstoneDescription.getTransparency){
+        if(!this.gemstone.getTransparency()){
+            console.log('UPDATING TRANSPARENCY')
             this.gemstone.setTransparency(gemstoneDescription.getTransparency());
         }
-        if(!gemstoneDescription.getShininess){
+        if(!this.gemstone.getShininess()){
+            console.log('UPDATING SHININESS')
             this.gemstone.setShininess(gemstoneDescription.getShininess());
+        }
+        if(!this.gemstone.getColorString()){
+            console.log('UPDATING COLOR STRING')
+            this.gemstone.setColorString(gemstoneDescription.getColorString());
+            console.log('PROVIDED COLOR STRING:\n',gemstoneDescription.getColorString())
+            console.log('SAVED COLOR STRING:\n',this.gemstone.getColorString())
         }
     }
 }

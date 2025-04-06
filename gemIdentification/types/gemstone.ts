@@ -58,7 +58,7 @@ export default class Gemstone{
 
 
     setTransparency(transparency:string){
-        this.transparency = this.transparency;
+        this.transparency = transparency;
     }
 
     getTransparency(){
@@ -66,7 +66,7 @@ export default class Gemstone{
     };
 
     setShininess(shininess:string){
-        this.shininess = this.shininess;
+        this.shininess = shininess;
     }
 
     getShininess(){
@@ -74,7 +74,7 @@ export default class Gemstone{
     };
 
     setColorString(colorString:string){
-        this.colorString = this.colorString;
+        this.colorString = colorString;
     }
 
     getColorString(){
