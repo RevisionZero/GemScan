@@ -31,6 +31,20 @@ export default function describeGem(){
       gemManager.describeGemstone(color,+size, transparency, luster);
       let finalResult = await gemManager.identifyGemstone();
       console.log('\n\n\nRECIEVED FINAL RESULT\n',finalResult)
+
+      // Save the result in the database
+      try {
+        await saveResult(
+          finalResult.name,
+          String(finalResult.result),
+          String(finalResult.confidence)
+        );
+        
+      } catch (error) {
+        console.error("Error saving the result: ", error);
+      }
+      
+
       router.push({
         pathname: '/identification/identificationResult',
         params: {
@@ -97,11 +111,19 @@ export default function describeGem(){
     );
 };
 
-const saveResult = async (gemName: string) => {
-  await addDoc(collection(db, 'identifications'), {
+const saveResult = async (
+  gemName: string, 
+  result: string, 
+  confidence: string
+): Promise<void> => {
+  await addDoc(collection(db, 'historydata'), {
     gemName,
-    date: serverTimestamp(),
+    result,
+    confidence,
+    timing: serverTimestamp(),
     rating: null,
+    userID: null,
+    feedback: null,
   });
 };
 
