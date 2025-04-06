@@ -1,92 +1,41 @@
-import React, { useEffect, useState } from "react";
-import { View, Button, Alert, ActivityIndicator, Text } from "react-native";
-import { Picker } from "@react-native-picker/picker";
-import {
-  useStripe,
-  initPaymentSheet,
-  presentPaymentSheet,
-} from "@stripe/stripe-react-native";
+import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { useFonts } from 'expo-font';
+import { Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
+import { StatusBar } from 'expo-status-bar';
+import { useEffect } from 'react';
+import 'react-native-reanimated';
 
-export default function Payment() {
-  const [selectedPlan, setSelectedPlan] = useState("basic");
-  const [paymentReady, setPaymentReady] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const { initPaymentSheet, presentPaymentSheet } = useStripe();
+import { useColorScheme } from '@/hooks/useColorScheme';
 
-  const planPrices = {
-    basic: 99, // in cents = $0.99
-    standard: 299,
-    premium: 499,
-  };
+// Prevent the splash screen from auto-hiding before asset loading is complete.
+SplashScreen.preventAutoHideAsync();
 
-  const API_URL = "http://10.0.2.2:8080";
-
-  const fetchPaymentSheetParams = async () => {
-    const response = await fetch(`${API_URL}/payment-sheet`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount: planPrices[selectedPlan] }),
-    });
-
-    const { paymentIntent, ephemeralKey, customer } = await response.json();
-    return { paymentIntent, ephemeralKey, customer };
-  };
-
-  const initializePaymentSheet = async () => {
-    const { paymentIntent, ephemeralKey, customer } = await fetchPaymentSheetParams();
-
-    const { error } = await initPaymentSheet({
-      merchantDisplayName: "GemScan",
-      customerId: customer,
-      customerEphemeralKeySecret: ephemeralKey,
-      paymentIntentClientSecret: paymentIntent,
-      allowsDelayedPaymentMethods: true,
-      defaultBillingDetails: {
-        name: "Jane Doe",
-      },
-    });
-
-    if (!error) setPaymentReady(true);
-  };
-
-  const openPaymentSheet = async () => {
-    const { error } = await presentPaymentSheet();
-    if (error) {
-      Alert.alert(`Error code: ${error.code}`, error.message);
-    } else {
-      Alert.alert("Success", "Your subscription is confirmed!");
-    }
-  };
+export default function RootLayout() {
+  const colorScheme = useColorScheme();
+  const [loaded] = useFonts({
+    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+  });
 
   useEffect(() => {
-    initializePaymentSheet();
-  }, [selectedPlan]); // Re-init when plan changes
+    if (loaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded]);
+
+  if (!loaded) {
+    return null;
+  }
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", padding: 24 }}>
-      <Text>Select a Subscription Plan:</Text>
-      <Picker
-        selectedValue={selectedPlan}
-        onValueChange={(itemValue) => {
-          setPaymentReady(false); // prevent accidental double payment while reloading
-          setSelectedPlan(itemValue);
-        }}
-      >
-        <Picker.Item label="Basic – $0.99" value="basic" />
-        <Picker.Item label="Standard – $2.99" value="standard" />
-        <Picker.Item label="Premium – $4.99" value="premium" />
-      </Picker>
+    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <Stack>
+        <Stack.Screen name="auth/Authentication"/>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 
-      {loading && <ActivityIndicator size="large" />}
-      <Button
-        title={`Subscribe – $${(planPrices[selectedPlan] / 100).toFixed(2)}`}
-        onPress={async () => {
-          setLoading(true);
-          await openPaymentSheet();
-          setLoading(false);
-        }}
-        disabled={!paymentReady || loading}
-      />
-    </View>
+        <Stack.Screen name="+not-found" />
+      </Stack>
+      <StatusBar style="auto" />
+    </ThemeProvider>
   );
 }

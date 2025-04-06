@@ -1,5 +1,9 @@
+
+
+
 import React, { useEffect, useState } from "react";
-import { View, Button, Alert, ActivityIndicator } from "react-native";
+import { View, Button, Alert, ActivityIndicator, Text } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import {
   useStripe,
   initPaymentSheet,
@@ -7,31 +11,36 @@ import {
 } from "@stripe/stripe-react-native";
 
 export default function Payment() {
-  const [payableAmount, setPayableAmount] = useState(600);
+  const [selectedPlan, setSelectedPlan] = useState("basic");
   const [paymentReady, setPaymentReady] = useState(false);
   const [loading, setLoading] = useState(false);
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
 
-  const API_URL = "http://10.0.2.2:8080"; // Replace this
+  const planPrices = {
+    basic: 999,
+    advanced: 1299,
+    elite: 1999,
+  };
+
+
+  const API_URL = "http://10.0.2.2:8080";
 
   const fetchPaymentSheetParams = async () => {
     const response = await fetch(`${API_URL}/payment-sheet`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ amount: payableAmount }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount: planPrices[selectedPlan] }),
     });
+
     const { paymentIntent, ephemeralKey, customer } = await response.json();
     return { paymentIntent, ephemeralKey, customer };
   };
 
   const initializePaymentSheet = async () => {
-    const { paymentIntent, ephemeralKey, customer } =
-      await fetchPaymentSheetParams();
+    const { paymentIntent, ephemeralKey, customer } = await fetchPaymentSheetParams();
 
     const { error } = await initPaymentSheet({
-      merchantDisplayName: "Example, Inc.",
+      merchantDisplayName: "GemScan",
       customerId: customer,
       customerEphemeralKeySecret: ephemeralKey,
       paymentIntentClientSecret: paymentIntent,
@@ -41,9 +50,7 @@ export default function Payment() {
       },
     });
 
-    if (!error) {
-      setPaymentReady(true);
-    }
+    if (!error) setPaymentReady(true);
   };
 
   const openPaymentSheet = async () => {
@@ -51,28 +58,40 @@ export default function Payment() {
     if (error) {
       Alert.alert(`Error code: ${error.code}`, error.message);
     } else {
-      Alert.alert("Success", "Your order is confirmed!");
+      Alert.alert("Success", "Your subscription is confirmed!");
     }
   };
-   useEffect(() => {
-      initializePaymentSheet();
-    }, []);
+
+  useEffect(() => {
+    initializePaymentSheet();
+  }, [selectedPlan]); // Re-init when plan changes
 
   return (
     <View style={{ flex: 1, justifyContent: "center", padding: 24 }}>
+      <Text>Select a Subscription Plan:</Text>
+      <Picker
+        selectedValue={selectedPlan}
+        onValueChange={(itemValue) => {
+          setPaymentReady(false); // prevent accidental double payment while reloading
+          setSelectedPlan(itemValue);
+        }}
+      >
+        <Picker.Item label="Basic – $9.99" value="basic" />
+        <Picker.Item label="Advanced – $12.99" value="advanced" />
+        <Picker.Item label="Elite – $19.99" value="elite" />
+      </Picker>
+
       {loading && <ActivityIndicator size="large" />}
       <Button
-        title="Pay $0.99"
+        title={`Subscribe – $${(planPrices[selectedPlan] / 100).toFixed(2)}`}
         onPress={async () => {
           setLoading(true);
-          await initializePaymentSheet().then(async () => {
-            await openPaymentSheet();
-            setLoading(false);
-          });
+          await openPaymentSheet();
+          setLoading(false);
         }}
-     disabled={ loading}
-
+        disabled={!paymentReady || loading}
       />
     </View>
   );
 }
+
