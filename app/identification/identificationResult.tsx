@@ -3,7 +3,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import Result from '@/gemIdentification/types/result';
 import { useRouter } from "expo-router";
 import { useLocalSearchParams } from 'expo-router';
-
+import { shareGemResult } from '../../lib/shareUtils';
 interface IdentificationResultProps {
     result: Result;
 }
@@ -16,6 +16,18 @@ export default function IdentificationResult(){
     } = useLocalSearchParams();
     const router = useRouter();
     console.log('RES:\n',name)
+
+    const handleShare = () => {
+        shareGemResult({
+          result: String(result),
+          name: String(name),
+          confidence: String(confidence),
+          color: String(color),
+          size: String(size),
+          transparency: String(transparency),
+          shininess: String(shininess)
+        });
+      };
     return(
         <SafeAreaProvider>
             <SafeAreaView>
@@ -27,7 +39,12 @@ export default function IdentificationResult(){
                     ) : (
                     <Text>Identification Failure</Text>
                     )}
+        <Button title="Share" onPress={handleShare} />
+
             </SafeAreaView>
+
+
+
         </SafeAreaProvider>
     );
 }
