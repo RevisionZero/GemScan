@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet, TextInput, Button } from "react-native";
+import { getAuth } from 'firebase/auth';
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
 import { db } from '@/lib/firebase';
@@ -116,13 +117,17 @@ const saveResult = async (
   result: string, 
   confidence: string
 ): Promise<void> => {
+  const auth = getAuth();
+  const currentUser = auth.currentUser;
+  const uid = currentUser ? currentUser.uid : null; // null if not logged in
+
   await addDoc(collection(db, 'historydata'), {
     gemName,
     result,
     confidence,
     timing: serverTimestamp(),
     rating: null,
-    userID: null,
+    userID: uid, // store the user's uid
     feedback: null,
   });
 };
