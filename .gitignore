@@ -19,6 +19,13 @@ ios
 lib/apikey.json
 lib/openrouterAPIKey.json
 
+apikey.json
+openrouterAPIKey.json
+
 # Gemstone database file
 gemdata.json
+
+.venv
+__pycache__
+.idea
 
