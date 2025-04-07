@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cf4d1dd6-9aa4-4578-8b0a-c0683e7fcb65" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/lib/shareUtils.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/identification/identificationResult.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/identification/identificationResult.tsx" afterDir="false" />
-    </list>
+    <list default="true" id="cf4d1dd6-9aa4-4578-8b0a-c0683e7fcb65" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -19,7 +16,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="383934974dad7e613201f8d41a9041efcf9c9dea" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -43,7 +40,7 @@
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "Sharing",
+    "git-widget-placeholder": "38393497",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/viviannguyen/Year3/Sem2/3a04/stripe-backend/GemScan",
     "settings.editor.selected.configurable": "preferences.pluginManager"
