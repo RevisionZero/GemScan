@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cf4d1dd6-9aa4-4578-8b0a-c0683e7fcb65" name="Changes" comment="" />
+    <list default="true" id="cf4d1dd6-9aa4-4578-8b0a-c0683e7fcb65" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/payment/payment.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/payment/payment.tsx" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -40,7 +43,7 @@
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "38393497",
+    "git-widget-placeholder": "payment-backend",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/viviannguyen/Year3/Sem2/3a04/stripe-backend/GemScan",
     "settings.editor.selected.configurable": "preferences.pluginManager"
@@ -48,6 +51,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/app/payment/StatusMessage" />
       <recent name="$PROJECT_DIR$/lib" />
     </key>
