@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet, TextInput, Button } from "react-native";
+import { getAuth } from 'firebase/auth';
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
 import { db } from '@/lib/firebase';
@@ -31,6 +32,20 @@ export default function describeGem(){
       gemManager.describeGemstone(color,+size, transparency, luster);
       let finalResult = await gemManager.identifyGemstone();
       console.log('\n\n\nRECIEVED FINAL RESULT\n',finalResult)
+
+      // Save the result in the database
+      try {
+        await saveResult(
+          finalResult.name,
+          String(finalResult.result),
+          String(finalResult.confidence)
+        );
+        
+      } catch (error) {
+        console.error("Error saving the result: ", error);
+      }
+      
+
       router.push({
         pathname: '/identification/identificationResult',
         params: {
@@ -97,11 +112,23 @@ export default function describeGem(){
     );
 };
 
-const saveResult = async (gemName: string) => {
-  await addDoc(collection(db, 'identifications'), {
+const saveResult = async (
+  gemName: string, 
+  result: string, 
+  confidence: string
+): Promise<void> => {
+  const auth = getAuth();
+  const currentUser = auth.currentUser;
+  const uid = currentUser ? currentUser.uid : null; // null if not logged in
+
+  await addDoc(collection(db, 'historydata'), {
     gemName,
-    date: serverTimestamp(),
+    result,
+    confidence,
+    timing: serverTimestamp(),
     rating: null,
+    userID: uid, // store the user's uid
+    feedback: null,
   });
 };
 
