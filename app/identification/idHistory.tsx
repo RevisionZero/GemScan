@@ -1,9 +1,25 @@
-// File: app/identification/history.tsx
 import React, { useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, useColorScheme } from 'react-native';
+import { 
+  View, 
+  Text, 
+  FlatList, 
+  TouchableOpacity, 
+  StyleSheet, 
+  useColorScheme, 
+  Alert 
+} from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
-import { collection, getDocs, query, orderBy, where, Timestamp } from 'firebase/firestore';
+import { 
+  collection, 
+  getDocs, 
+  query, 
+  orderBy, 
+  where, 
+  Timestamp, 
+  deleteDoc, 
+  doc 
+} from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { db } from '../../lib/firebase';
 
@@ -46,11 +62,25 @@ export default function History() {
     }, [])
   );
 
+  // Function to delete a document from Firestore
+  const handleDelete = async (itemId: string) => {
+    try {
+      await deleteDoc(doc(db, 'historydata', itemId));
+      // Refetch history after deletion
+      fetchHistory();
+    } catch (error) {
+      console.error("Error deleting item: ", error);
+      Alert.alert("Error", "Could not delete the item.");
+    }
+  };
+
   // Dynamic colors based on device theme
   const backgroundColor = colorScheme === 'dark' ? '#121212' : '#ffffff';
   const itemBackgroundColor = colorScheme === 'dark' ? '#1e1e1e' : '#f9f9f9';
   const textColor = colorScheme === 'dark' ? '#ffffff' : '#000000';
   const secondaryTextColor = colorScheme === 'dark' ? '#aaaaaa' : '#555555';
+  // Choose delete background based on theme: a medium gray for light and a dark gray for dark mode.
+  const deleteBackgroundColor = colorScheme === 'dark' ? '#444444' : '#999999';
 
   return (
     <View style={[styles.container, { backgroundColor }]}>
@@ -63,30 +93,58 @@ export default function History() {
             : 'Unknown Date';
           
           return (
-            <TouchableOpacity
-              style={[styles.item, { backgroundColor: itemBackgroundColor }]}
-              // Disable rating if already provided
-              disabled={item.rating != null}
-              onPress={() =>
-                router.push({
-                  pathname: '/identification/ratingGem',
-                  params: {
-                    id: String(item.id),
-                    gemName: String(item.gemName),
-                  },
-                })
-              }
-            >
-              <Text style={[styles.title, { color: textColor }]}>Gem: {item.gemName}</Text>
-              <Text style={[styles.text, { color: secondaryTextColor }]}>Result: {item.result}</Text>
-              <Text style={[styles.text, { color: secondaryTextColor }]}>Confidence: {item.confidence}</Text>
-              <Text style={[styles.text, { color: secondaryTextColor }]}>Date: {date}</Text>
-              {item.userID && <Text style={[styles.text, { color: secondaryTextColor }]}>User: {item.userID}</Text>}
-              {item.feedback && <Text style={[styles.text, { color: secondaryTextColor }]}>Feedback: {item.feedback}</Text>}
-              <Text style={item.rating ? styles.rated : styles.unrated}>
-                {item.rating ? `Rating: ${item.rating} ★` : 'Tap to Rate ★'}
-              </Text>
-            </TouchableOpacity>
+            <View style={[styles.item, { backgroundColor: itemBackgroundColor }]}>
+              <TouchableOpacity
+                style={styles.itemContent}
+                // Tapping the left 75% navigates to rating
+                onPress={() =>
+                  router.push({
+                    pathname: '/identification/ratingGem',
+                    params: {
+                      id: String(item.id),
+                      gemName: String(item.gemName),
+                    },
+                  })
+                }
+              >
+                <Text style={[styles.title, { color: textColor }]}>
+                  Gem: {item.gemName}
+                </Text>
+                <Text style={[styles.text, { color: secondaryTextColor }]}>
+                  Result: {item.result}
+                </Text>
+                <Text style={[styles.text, { color: secondaryTextColor }]}>
+                  Confidence: {item.confidence}
+                </Text>
+                <Text style={[styles.text, { color: secondaryTextColor }]}>
+                  Date: {date}
+                </Text>
+                {item.feedback && (
+                  <Text style={[styles.text, { color: secondaryTextColor }]}>
+                    Feedback: {item.feedback}
+                  </Text>
+                )}
+                <Text style={item.rating ? styles.rated : styles.unrated}>
+                  {item.rating ? `Rating: ${item.rating} ★` : 'Tap to Rate ★'}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.deleteSection, { backgroundColor: deleteBackgroundColor }]}
+                // Tapping the right 25% deletes the item
+                onPress={() =>
+                  Alert.alert(
+                    "Delete",
+                    "Are you sure you want to delete this item?",
+                    [
+                      { text: "Cancel", style: "cancel" },
+                      { text: "Delete", style: "destructive", onPress: () => handleDelete(item.id) }
+                    ]
+                  )
+                }
+              >
+                <Text style={styles.deleteText}>Delete</Text>
+              </TouchableOpacity>
+            </View>
           );
         }}
         ListEmptyComponent={
@@ -105,10 +163,16 @@ const styles = StyleSheet.create({
     padding: 16 
   },
   item: {
+    flexDirection: 'row',
+    alignItems: 'stretch', // ensure children stretch to full height
     padding: 12,
     marginBottom: 12,
     borderRadius: 10,
     elevation: 3, // Android shadow
+  },
+  itemContent: {
+    flex: 3, // 75% width
+    justifyContent: 'center',
   },
   title: { 
     fontSize: 18, 
@@ -136,7 +200,16 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 16,
   },
+  deleteSection: {
+    flex: 1, // 25% width
+    alignSelf: 'stretch', // take up full height of parent
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    marginLeft: 8,
+  },
+  deleteText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
 });
-// This component fetches and displays the identification history from Firestore.
-// It uses a FlatList to render the items and allows users to tap on an item to rate it.
-// The component also handles dynamic theming based on the device's color scheme.
