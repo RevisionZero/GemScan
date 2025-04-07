@@ -34,6 +34,13 @@ export default function HomeScreen() {
             color={buttonColor}
           />
         </View>
+        <View style={styles.buttonSpacer} />
+                  <Button
+                    title="Upgrade Account"
+                    onPress={() => router.navigate('/payment/payment')}
+                    color={buttonColor}
+                  />
+
       </SafeAreaView>
     </SafeAreaProvider>
   );
