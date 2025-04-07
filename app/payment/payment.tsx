@@ -1,25 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { 
-  View, 
-  Button, 
-  Alert, 
-  ActivityIndicator, 
-  Text, 
-  StyleSheet, 
-  useColorScheme, 
-  Platform 
-} from "react-native";
+import { View, Button, Alert, ActivityIndicator, Text } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { useStripe } from "@stripe/stripe-react-native";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import {
+  useStripe,
+  initPaymentSheet,
+  presentPaymentSheet,
+} from "@stripe/stripe-react-native";
 
 export default function Payment() {
   const [selectedPlan, setSelectedPlan] = useState("basic");
   const [paymentReady, setPaymentReady] = useState(false);
   const [loading, setLoading] = useState(false);
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === "dark";
 
   const planPrices = {
     basic: 999,
@@ -27,17 +19,48 @@ export default function Payment() {
     elite: 1999,
   };
 
-  // Use your local backend endpoint; 10.0.2.2 is the correct alias for Android emulators.
-  const API_URL = "http://10.0.2.2:8080";
-
   const fetchPaymentSheetParams = async () => {
-    const response = await fetch(`${API_URL}/payment-sheet`, {
+    const stripeSecretKey = 'sk_test_51RAF0eRonbo1nkc2n4Huib5tfOk0HEgqLv9Pm3WNtRkLiKUw4kQGhWCr3yMGfUpn4WLDZ69q9vyMYihokB442Ug400aScOey9N';
+    const selectedAmount = planPrices[selectedPlan];
+
+    // 1. Create customer
+    const customerRes = await fetch("https://api.stripe.com/v1/customers", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount: planPrices[selectedPlan] }),
+      headers: {
+        Authorization: `Bearer ${stripeSecretKey}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
     });
-    const { paymentIntent, ephemeralKey, customer } = await response.json();
-    return { paymentIntent, ephemeralKey, customer };
+    const customer = await customerRes.json();
+
+    // 2. Create ephemeral key
+    const ephemeralKeyRes = await fetch("https://api.stripe.com/v1/ephemeral_keys", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${stripeSecretKey}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Stripe-Version": "2023-10-16",
+      },
+      body: `customer=${customer.id}`,
+    });
+    const ephemeralKey = await ephemeralKeyRes.json();
+
+    // 3. Create payment intent
+    const paymentIntentRes = await fetch("https://api.stripe.com/v1/payment_intents", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${stripeSecretKey}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: `amount=${selectedAmount}&currency=cad&customer=${customer.id}&automatic_payment_methods[enabled]=true`,
+    });
+    const paymentIntent = await paymentIntentRes.json();
+
+    return {
+      paymentIntent: paymentIntent.client_secret,
+      ephemeralKey: ephemeralKey.secret,
+      customer: customer.id,
+    };
   };
 
   const initializePaymentSheet = async () => {
@@ -68,68 +91,33 @@ export default function Payment() {
 
   useEffect(() => {
     initializePaymentSheet();
-  }, [selectedPlan]); // reinitialize when plan changes
+  }, [selectedPlan]);
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={[styles.container, { backgroundColor: isDark ? "#121212" : "#f9f9f9" }]}>
-        <Text style={[styles.header, { color: isDark ? "#fff" : "#000" }]}>
-          Select a Subscription Plan:
-        </Text>
-        <Picker
-          selectedValue={selectedPlan}
-          onValueChange={(itemValue) => {
-            setPaymentReady(false); // prevent accidental double payments while reloading
-            setSelectedPlan(itemValue);
-          }}
-          style={[
-            styles.picker,
-            { color: isDark ? "#fff" : "#000", backgroundColor: isDark ? "#1e1e1e" : "#fff" }
-          ]}
-          dropdownIconColor={isDark ? "#fff" : "#000"}
-        >
-          <Picker.Item label="Basic – $9.99" value="basic" />
-          <Picker.Item label="Advanced – $12.99" value="advanced" />
-          <Picker.Item label="Elite – $19.99" value="elite" />
-        </Picker>
-        {loading && <ActivityIndicator style={styles.activityIndicator} size="large" color={isDark ? "#fff" : "#0000ff"} />}
-        <View style={styles.buttonContainer}>
-          <Button
-            title={`Subscribe – $${(planPrices[selectedPlan] / 100).toFixed(2)}`}
-            onPress={async () => {
-              setLoading(true);
-              await openPaymentSheet();
-              setLoading(false);
-            }}
-            disabled={!paymentReady || loading}
-            color={isDark ? "#007AFF" : "#4CAF50"}
-          />
-        </View>
-      </SafeAreaView>
-    </SafeAreaProvider>
+    <View style={{ flex: 1, justifyContent: "center", padding: 24 }}>
+      <Text>Select a Subscription Plan:</Text>
+      <Picker
+        selectedValue={selectedPlan}
+        onValueChange={(itemValue) => {
+          setPaymentReady(false);
+          setSelectedPlan(itemValue);
+        }}
+      >
+        <Picker.Item label="Basic – $9.99" value="basic" />
+        <Picker.Item label="Advanced – $12.99" value="advanced" />
+        <Picker.Item label="Elite – $19.99" value="elite" />
+      </Picker>
+
+      {loading && <ActivityIndicator size="large" />}
+      <Button
+        title={`Subscribe – $${(planPrices[selectedPlan] / 100).toFixed(2)}`}
+        onPress={async () => {
+          setLoading(true);
+          await openPaymentSheet();
+          setLoading(false);
+        }}
+        disabled={!paymentReady || loading}
+      />
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-    justifyContent: "center",
-  },
-  header: {
-    fontSize: 20,
-    marginBottom: 16,
-    textAlign: "center",
-  },
-  picker: {
-    marginHorizontal: 12,
-    marginBottom: 24,
-  },
-  activityIndicator: {
-    marginVertical: 16,
-  },
-  buttonContainer: {
-    alignSelf: Platform.OS === "android" ? "center" : "flex-start",
-    width: Platform.OS === "android" ? "80%" : "60%",
-  },
-});
