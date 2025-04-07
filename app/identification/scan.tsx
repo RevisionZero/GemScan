@@ -12,6 +12,20 @@ export default function Scan(){
     const cameraRef = useRef<CameraView | null>(null);
     const router = useRouter();
 
+    function imageFail(){
+      Alert.alert('Scan Unsuccessful', 'Scan Unsuccessful', [
+        {
+          text: 'Retry Scan',
+          onPress: () => {},
+        },
+        {
+          text: 'Home',
+          onPress: () => {router.navigate('/');GemIdentificationManager.getInstance().scanGemstone("")},
+          style: 'cancel',
+        }
+      ]);
+    }
+
     async function scanGem(){
       if(cameraRef.current){
         const pic = await cameraRef.current.takePictureAsync();
@@ -22,30 +36,34 @@ export default function Scan(){
           router.navigate('/identification/describeGem')
         }
         else{
-          Alert.alert('Scan Unsuccessful', 'Scan Unsuccessful', [
-            {
-              text: 'Retry Scan',
-              onPress: () => {},
-            },
-            {
-              text: 'Home',
-              onPress: () => {router.navigate('/');gemManager.scanGemstone("")},
-              style: 'cancel',
-            }
-          ]);
+          imageFail();
         }
       }
     };
 
     async function uploadImage() {
+      let gemManager = GemIdentificationManager.getInstance();
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ['images', 'videos'],
         allowsEditing: true,
         aspect: [4, 3],
         quality: 1,
       });
-  
-      console.log(result);
+
+      if(result["assets"]){
+        let uri = result["assets"][0].uri;
+        if(uri){
+          gemManager.scanGemstone(uri);
+          router.navigate('/identification/describeGem');
+        }
+        else{
+          imageFail();
+        }
+        console.log('UPLOADED IMAGE:\n',result["assets"][0].uri);
+      }
+      else{
+        imageFail();
+      }
   
       // if (!result.canceled) {
       //   setImage(result.assets[0].uri);
