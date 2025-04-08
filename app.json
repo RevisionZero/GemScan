@@ -1,65 +1,84 @@
 {
-    "expo": {
-        "name": "GemScan",
-        "slug": "GemScan",
-        "version": "1.0.0",
-        "orientation": "portrait",
-        "icon": "./assets/images/icon.png",
-        "scheme": "gemScanScheme",
-        "userInterfaceStyle": "automatic",
-        "newArchEnabled": true,
-        "ios": {
-            "supportsTablet": true,
-            "bundleIdentifier": "com.omarshehada.GemScan"
-        },
-        "android": {
-            "adaptiveIcon": {
-                "foregroundImage": "./assets/images/adaptive-icon.png",
-                "backgroundColor": "#ffffff"
-            },
-            "package": "com.omarshehada.GemScan"
-        },
-        "web": {
-            "bundler": "metro",
-            "output": "static",
-            "favicon": "./assets/images/favicon.png"
-        },
-        "plugins": [
-            "expo-router",
-            [
-                "expo-splash-screen",
-                {
-                    "image": "./assets/images/splash-icon.png",
-                    "imageWidth": 200,
-                    "resizeMode": "contain",
-                    "backgroundColor": "#ffffff"
-                }
-            ],
-            [
-                "expo-camera",
-                {
-                    "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera. This will be used purely for gemstone identification."
-                }
-            ],
-            [
-                "expo-image-picker",
-                {
-                    "photosPermission": "The app accesses your photos to upload them for identification."
-                }
-            ],
-            [
-                "expo-build-properties",
-                {
-                    "ios": {
-                        "useFrameworks": "static"
-                    }
-                }
-            ],
-            "@react-native-firebase/app",
-            "@react-native-firebase/auth"
-        ],
-        "experiments": {
-            "typedRoutes": true
+  "expo": {
+    "name": "GemScan",
+    "slug": "GemScan",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "gemScanScheme",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.omarshehada.GemScan"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "googleServicesFile": "./google-services.json",
+      "package": "com.omarshehada.GemScan",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
         }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera. This will be used purely for gemstone identification."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to upload them for identification."
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ],
+      [
+        "@stripe/stripe-react-native",
+        {
+          "enableGooglePay": true
+        }
+      ],
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "bab9c044-38a8-49a3-bd6c-03dc8d184904"
+      }
     }
+  }
 }

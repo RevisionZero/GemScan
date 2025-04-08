@@ -7,6 +7,8 @@ import {
   presentPaymentSheet,
 } from "@stripe/stripe-react-native";
 
+import stripeKey from '@/lib/stripeAPIKey.json';
+
 export default function Payment() {
   const [selectedPlan, setSelectedPlan] = useState("basic");
   const [paymentReady, setPaymentReady] = useState(false);
@@ -20,7 +22,7 @@ export default function Payment() {
   };
 
   const fetchPaymentSheetParams = async () => {
-    const stripeSecretKey = 'sk_test_51RAF0eRonbo1nkc2n4Huib5tfOk0HEgqLv9Pm3WNtRkLiKUw4kQGhWCr3yMGfUpn4WLDZ69q9vyMYihokB442Ug400aScOey9N';
+    const stripeSecretKey = stripeKey.secret_key;
     const selectedAmount = planPrices[selectedPlan];
 
     // 1. Create customer
