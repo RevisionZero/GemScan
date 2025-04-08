@@ -18,9 +18,11 @@ ios
 # API Keys
 lib/apikey.json
 lib/openrouterAPIKey.json
+lib/stripeAPIKey.json
 
 apikey.json
 openrouterAPIKey.json
+stripeAPIKey.json
 
 # Gemstone database file
 gemdata.json
@@ -28,4 +30,6 @@ gemdata.json
 .venv
 __pycache__
 .idea
+
+google-services.json
 

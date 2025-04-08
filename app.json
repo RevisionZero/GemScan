@@ -17,6 +17,7 @@
                 "foregroundImage": "./assets/images/adaptive-icon.png",
                 "backgroundColor": "#ffffff"
             },
+            "googleServicesFile": "./google-services.json",
             "package": "com.omarshehada.GemScan"
         },
         "web": {
@@ -53,6 +54,12 @@
                     "ios": {
                         "useFrameworks": "static"
                     }
+                }
+            ],
+            [
+                "@stripe/stripe-react-native",
+                {
+                    "enableGooglePay": true
                 }
             ],
             "@react-native-firebase/app",
