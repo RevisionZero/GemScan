@@ -35,5 +35,5 @@ GemScan is a mobile app built with **React Native (Expo Router)** that uses **AI
 1. Clone the repo:
 
 ```bash
-git clone
+git clone https://github.com/RevisionZero/GemScan
 cd gemscan
