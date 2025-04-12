@@ -1,50 +1,39 @@
-# Welcome to your Expo app 👋
+# 💎 GemScan
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+GemScan is a mobile app built with **React Native (Expo Router)** that uses **AI-powered image recognition** and **gemstone attribute analysis** to help users identify gemstones. Whether you're a gem enthusiast, collector, or jeweler, GemScan makes gemstone identification fast, accurate, and easy to share.
 
-## Get started
+## 🚀 Features
 
-1. Install dependencies
+- 📷 **Image-Based Gem Identification**  
+  Upload or take a photo of a gemstone for instant analysis.
 
-   ```bash
-   npm install
-   ```
+- ✍️ **Attribute-Based Search**  
+  Describe gemstones by attributes like **color**, **shape**, and **size** to improve results.
 
-2. Start the app
+- 🧠 **AI-Powered Results**  
+  Combines machine learning with a gemstone database for high-accuracy identification.
 
-   ```bash
-    npx expo start
-   ```
+- 👤 **User Accounts**  
+  Create and manage profiles to track searches, saved gems, and history.
 
-In the output, you'll find options to open the app in a
+- 📤 **Social Sharing**  
+  Share your gemstone finds with friends and the gem community.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- 💬 **Feedback System**  
+  Help improve results by providing feedback on identifications.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## 🛠️ Tech Stack
 
-## Get a fresh project
+- **React Native** (with **Expo Router**)
+- **Python (Convolutional Neural Network Machine Learning Model)** for gemstone identification
+- - **Flask (To Host CNN)** for gemstone identification
+- **Firebase** To securely store user data, identification history, and gemstone data
+- **Custom Gemstone Database**
 
-When you're ready, run:
+## 📦 Installation
+
+1. Clone the repo:
 
 ```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+git clone
+cd gemscan
